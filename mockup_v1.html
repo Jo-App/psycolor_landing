@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>싸이칼러 AI (PsyColor AI) - B2B 엔터프라이즈 솔루션</title>
+    <style>
+        /* Base Variables & Reset */
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #818cf8;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* 웹 폰트 적용 (프리텐다드) */
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Layout Container */
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Navigation */
+        header {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dim);
+        }
+
+        .nav-links span { cursor: pointer; transition: color 0.2s; }
+        .nav-links span:hover { color: var(--text-main); }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 40px 0;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+        }
+
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sub-copy {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+        }
+
+        /* Buttons */
+        .cta-group {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Dashboard UI Mockup */
+        .dashboard-mockup {
+            margin-top: 80px;
+            background: var(--surface-color);
+            border-radius: 16px 16px 0 0;
+            border: 1px solid var(--glass-border);
+            border-bottom: none;
+            padding: 40px;
+            height: 350px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 -20px 40px rgba(0,0,0,0.3);
+        }
+
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            margin-top: 40px;
+        }
+
+        .bar {
+            width: 48px;
+            background: var(--accent);
+            opacity: 0.6;
+            border-radius: 6px 6px 0 0;
+            position: relative;
+        }
+        
+        /* 3 Pillar Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: -30px; /* Overlap with dashboard slightly */
+            position: relative;
+            z-index: 10;
+            padding-bottom: 80px;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 32px;
+            border-radius: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover { transform: translateY(-5px); }
+        .feature-card h3 { font-size: 1.4rem; margin-bottom: 12px; color: var(--accent); }
+        .feature-card p { font-size: 1rem; color: var(--text-dim); }
+
+        /* Security Banner (On-premise) */
+        .security-banner {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .security-banner h2 { font-size: 2.5rem; margin-bottom: 16px; }
+
+        /* Footer CTA */
+        .footer-cta {
+            padding: 80px 0;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+        }
+        
+        .footer-cta h2 { font-size: 2.5rem; margin-bottom: 24px; }
+
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .cta-group { flex-direction: column; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon"></div>
+                PsyColor AI
+            </div>
+            <div class="nav-links">
+                <span>솔루션 소개</span>
+                <span>기술력</span>
+                <span>보안 (On-premise)</span>
+            </div>
+            <button class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;">문의하기</button>
+        </header>
+
+        <section class="hero">
+            <div class="badge">B2B 엔터프라이즈 솔루션 출시 예정</div>
+            <h1>임직원의 마음이 건강해야<br><span class="gradient-text">기업의 성장이 지속됩니다</span></h1>
+            <p class="sub-copy">기존 EAP의 낮은 참여율을 혁신합니다. 즐거운 인터랙티브 UX와 온프레미스 AI 기반의 철저한 보안으로 조직의 멘탈 리스크를 사전에 관리하세요.</p>
+            <div class="cta-group">
+                <button class="btn btn-primary">도입 상담 신청하기</button>
+                <button class="btn btn-secondary">투자자용 IR 덱 다운로드</button>
+            </div>
+
+            <div class="dashboard-mockup">
+                <div style="text-align: left; font-size: 0.9rem; color: var(--text-dim); margin-bottom: 20px;">
+                    ▶ 조직 감정 타임라인 대시보드 UI (Mockup)
+                </div>
+                <div class="chart-container">
+                    <div class="bar" style="height: 40%;"></div>
+                    <div class="bar" style="height: 65%;"></div>
+                    <div class="bar" style="height: 85%;"></div>
+                    <div class="bar" style="height: 50%;"></div>
+                    <div class="bar" style="height: 75%;"></div>
+                    <div class="bar" style="height: 95%;"></div>
+                    <div class="bar" style="height: 60%;"></div>
+                </div>
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 150px; background: linear-gradient(transparent, var(--bg-color));"></div>
+            </div>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <h3>투영 (Projection)</h3>
+                <p>99%의 완주율을 기록하는 인터랙티브 설문 UX로 임직원의 자발적인 참여를 이끌어냅니다.</p>
+            </div>
+            <div class="feature-card">
+                <h3>확장 (Expansion)</h3>
+                <p>단발성 검사를 넘어 시계열 데이터 분석을 통해 조직의 번아웃 위험군을 조기에 예측합니다.</p>
+            </div>
+            <div class="feature-card">
+                <h3>울림 (Resonance)</h3>
+                <p>익명성이 보장된 기술적 안전지대에서 임직원이 진솔하게 속마음을 털어놓을 수 있습니다.</p>
+            </div>
+        </section>
+
+        <section class="security-banner">
+            <div class="badge" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3); color: #4ade80;">On-premise LLM Architecture</div>
+            <h2>데이터 유출 걱정 없는 독립형 AI</h2>
+            <p style="color: var(--text-dim); max-width: 600px; margin: 0 auto;">
+                가장 민감한 임직원의 심리 데이터는 외부 인터넷과 완벽히 차단된 기업 내부망에서만 처리됩니다. 
+                최고 수준의 보안 환경에서 인사이트를 도출하세요.
+            </p>
+        </section>
+
+        <section class="footer-cta">
+            <h2>지금 우리 조직의 <span class="gradient-text">마음 온도</span>를 확인해 보세요.</h2>
+            <p style="color: var(--text-dim); margin-bottom: 40px; font-size: 1.1rem;">싸이칼러 AI와 함께 건강하고 지속 가능한 기업 문화를 설계하십시오.</p>
+            <button class="btn btn-primary" style="padding: 18px 48px; font-size: 1.1rem;">솔루션 데모 체험하기</button>
+        </section>
+
+        <footer>
+            &copy; 2026 PsyColor AI. All rights reserved. Architecture designed by 9-year FE Engineer.
+        </footer>
+    </div>
+</body>
+</html>
