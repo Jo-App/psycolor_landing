@@ -1,0 +1,40 @@
+// 1. 3D Canvas 및 물리엔진 컨텍스트
+<Canvas>
+  <Physics>
+    <JengaTower>
+       // 2. Zustand 스토어에서 필터링 상태(selectedMembers) 구독
+       // 3. 가족의 7일치 미션 데이터를 map으로 순회하며 Block 생성
+       {blocks.map(block => (
+          <JengaBlock 
+             key={block.id} 
+             data={block} 
+             isFiltered={selectedMembers.includes(block.userId)} 
+             onClick={() => focusToBlock(block.id)}
+          />
+       ))}
+    </JengaTower>
+  </Physics>
+  <CameraControls />
+</Canvas>
+
+// JengaBlock 컴포넌트 내부의 논리
+const JengaBlock = ({ data, isFiltered, onClick }) => {
+  return (
+    <RigidBody type="dynamic"> {/* 물리 작용 적용 */}
+      <mesh onClick={onClick}>
+         <boxGeometry />
+         {/* 필터링 여부에 따라 재질(투명도/발광) 동적 변경 */}
+         <meshStandardMaterial 
+            color={data.color} 
+            transparent={!isFiltered} 
+            opacity={isFiltered ? 1 : 0.2} 
+         />
+      </mesh>
+      {/* 선택 시 퀘스트 내용 오버레이 */}
+      {isFocused && (
+         <Html center>
+            <QuestCard mission={data.mission} />
+         </Html>
+      )}
+    </RigidBody>
+  )

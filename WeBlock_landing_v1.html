@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WeBlock - 당신의 마음을 쌓는 블록</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:    #E63946;
+      --blue:   #3A86FF;
+      --yellow: #FFBE0B;
+      --green:  #06D6A0;
+      --purple: #8338EC;
+      --cream:  #FFFBF2;
+      --dark:   #1C1C2E;
+      --mid:    #4A4A6A;
+      --light:  #F0EDE6;
+      --radius: 16px;
+      --shadow: 0 6px 24px rgba(0,0,0,0.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Trebuchet MS', 'Gill Sans', 'Segoe UI', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ──────────────── NAV ──────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(255, 251, 242, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid rgba(0,0,0,0.06);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.10); }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1.35rem; font-weight: 900; letter-spacing: -0.5px;
+      text-decoration: none; color: var(--dark);
+    }
+    .nav-logo .logo-blocks {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
+      width: 28px; height: 28px;
+    }
+    .nav-logo .logo-blocks span {
+      border-radius: 4px;
+      display: block;
+    }
+    .lb1 { background: var(--red); }
+    .lb2 { background: var(--blue); }
+    .lb3 { background: var(--yellow); }
+    .lb4 { background: var(--green); }
+
+    .nav-links {
+      display: flex; gap: 28px; list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none; color: var(--mid);
+      font-size: 0.95rem; font-weight: 600;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--dark); }
+
+    .nav-cta {
+      background: var(--dark); color: #fff;
+      padding: 10px 24px; border-radius: 50px;
+      font-size: 0.9rem; font-weight: 700;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background 0.25s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 4px 4px 0 var(--blue);
+    }
+    .nav-cta:hover {
+      background: var(--blue);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--dark);
+    }
+
+    /* ──────────────── HERO ──────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 120px 40px 80px;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-bg-blocks {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    }
+    .bg-block {
+      position: absolute; border-radius: 12px; opacity: 0.18;
+      animation: floatBlock 6s ease-in-out infinite;
+    }
+    .bg-block:nth-child(1)  { width:70px;  height:70px;  background:var(--red);    top:10%; left:5%;   animation-delay:0s; }
+    .bg-block:nth-child(2)  { width:45px;  height:45px;  background:var(--yellow); top:20%; left:88%;  animation-delay:1s; }
+    .bg-block:nth-child(3)  { width:90px;  height:90px;  background:var(--blue);   top:60%; left:3%;   animation-delay:2s; }
+    .bg-block:nth-child(4)  { width:55px;  height:55px;  background:var(--green);  top:75%; left:90%;  animation-delay:0.5s; }
+    .bg-block:nth-child(5)  { width:40px;  height:40px;  background:var(--purple); top:85%; left:50%;  animation-delay:1.5s; }
+    .bg-block:nth-child(6)  { width:60px;  height:60px;  background:var(--yellow); top:40%; left:92%;  animation-delay:3s; }
+    .bg-block:nth-child(7)  { width:35px;  height:35px;  background:var(--red);    top:50%; left:8%;   animation-delay:2.5s; }
+
+    @keyframes floatBlock {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-20px) rotate(8deg); }
+    }
+
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 60px; position: relative; z-index: 1;
+    }
+
+    .hero-text { flex: 1; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--yellow); color: var(--dark);
+      padding: 6px 16px; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 800; letter-spacing: 0.5px;
+      margin-bottom: 24px;
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+    }
+    .hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dark); }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+    .hero-title .highlight-red   { color: var(--red); }
+    .hero-title .highlight-blue  { color: var(--blue); }
+    .hero-title .highlight-green { color: var(--green); }
+
+    .hero-subtitle-kr {
+      font-size: 1.1rem; color: var(--mid); margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem; color: var(--mid);
+      line-height: 1.7; max-width: 480px; margin-bottom: 36px;
+    }
+
+    .hero-buttons {
+      display: flex; gap: 14px; flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--dark); color: #fff;
+      padding: 14px 32px; border-radius: 50px;
+      font-size: 1rem; font-weight: 700;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 5px 5px 0 var(--purple);
+    }
+    .btn-primary:hover {
+      transform: translate(-2px,-2px);
+      box-shadow: 7px 7px 0 var(--purple);
+    }
+    .btn-secondary {
+      background: transparent; color: var(--dark);
+      padding: 14px 32px; border-radius: 50px;
+      font-size: 1rem; font-weight: 700;
+      text-decoration: none; border: 2.5px solid var(--dark);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: var(--dark); color: #fff;
+    }
+
+    /* ──────────────── GLOBE CHARACTER ──────────────── */
+    .hero-visual {
+      flex: 0 0 420px; display: flex;
+      align-items: center; justify-content: center;
+      position: relative;
+    }
+
+    .globe-scene {
+      position: relative;
+      width: 320px; height: 380px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .globe-body {
+      width: 200px; height: 200px; border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, #5DADE2, #1A6FA8 55%, #0D4F7A);
+      position: relative;
+      animation: floatGlobe 3.5s ease-in-out infinite;
+      box-shadow:
+        inset -20px -20px 40px rgba(0,0,0,0.25),
+        inset 10px 10px 30px rgba(255,255,255,0.15),
+        0 30px 60px rgba(58,134,255,0.30);
+      overflow: hidden;
+    }
+
+    /* Land masses */
+    .globe-body::before {
+      content: '';
+      position: absolute;
+      width: 70px; height: 55px;
+      background: var(--green);
+      border-radius: 50% 60% 50% 60%;
+      top: 30px; left: 35px;
+      opacity: 0.85;
+      box-shadow: 50px 35px 0 38px rgba(6,214,160,0.7),
+                  -10px 70px 0 25px rgba(6,214,160,0.65);
+    }
+    .globe-body::after {
+      content: '';
+      position: absolute;
+      width: 40px; height: 30px;
+      background: rgba(6,214,160,0.6);
+      border-radius: 50%;
+      bottom: 50px; right: 30px;
+    }
+
+    /* Globe face */
+    .globe-face {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -55%);
+      width: 130px; height: 100px;
+      z-index: 2;
+    }
+    .globe-eyes {
+      display: flex; justify-content: center; gap: 34px;
+      margin-bottom: 14px;
+    }
+    .globe-eye {
+      width: 20px; height: 22px; background: var(--dark);
+      border-radius: 50%;
+      position: relative;
+      animation: blink 4s ease-in-out infinite;
+    }
+    .globe-eye::after {
+      content: '';
+      width: 6px; height: 6px;
+      background: #fff; border-radius: 50%;
+      position: absolute; top: 3px; left: 4px;
+    }
+    @keyframes blink {
+      0%,45%,55%,100% { transform: scaleY(1); }
+      50%              { transform: scaleY(0.1); }
+    }
+
+    .globe-smile {
+      width: 60px; height: 30px;
+      border: 4px solid var(--dark);
+      border-top: none; border-radius: 0 0 50px 50px;
+      margin: 0 auto;
+    }
+
+    /* Globe cheeks */
+    .globe-cheeks {
+      display: flex; justify-content: space-between; padding: 0 14px;
+      margin-top: 6px;
+    }
+    .cheek {
+      width: 18px; height: 11px;
+      background: rgba(230,57,70,0.55);
+      border-radius: 50%;
+    }
+
+    /* Globe shadow */
+    .globe-shadow {
+      position: absolute;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      width: 140px; height: 18px;
+      background: rgba(0,0,0,0.12);
+      border-radius: 50%;
+      animation: shadowPulse 3.5s ease-in-out infinite;
+    }
+
+    @keyframes floatGlobe {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-22px); }
+    }
+    @keyframes shadowPulse {
+      0%,100% { transform: translateX(-50%) scaleX(1) scaleY(1); opacity:0.12; }
+      50%      { transform: translateX(-50%) scaleX(0.75) scaleY(0.7); opacity:0.06; }
+    }
+
+    /* Stacked blocks around globe */
+    .stack-blocks {
+      position: absolute; bottom: 10px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+    }
+    .s-block {
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1rem; color: rgba(255,255,255,0.9);
+      letter-spacing: 1px;
+      animation: blockBounce 3s ease-in-out infinite;
+    }
+    .sb1 { width:120px; height:36px; background:var(--blue);   box-shadow: 4px 4px 0 rgba(0,0,0,0.18); animation-delay:0s; }
+    .sb2 { width:105px; height:36px; background:var(--green);  box-shadow: 4px 4px 0 rgba(0,0,0,0.18); animation-delay:0.15s; }
+    .sb3 { width: 90px; height:36px; background:var(--purple); box-shadow: 4px 4px 0 rgba(0,0,0,0.18); animation-delay:0.3s; }
+
+    @keyframes blockBounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-5px); }
+    }
+
+    /* Side floating blocks */
+    .side-block {
+      position: absolute;
+      border-radius: 10px;
+      animation: floatBlock 5s ease-in-out infinite;
+    }
+    .side-block.bl1 { width:50px;height:50px; background:var(--red);    top:5%;  left:-20px; animation-delay:0s; box-shadow: 4px 4px 0 rgba(0,0,0,0.15); }
+    .side-block.bl2 { width:40px;height:40px; background:var(--yellow); top:15%; right:-10px;animation-delay:1s; box-shadow: 4px 4px 0 rgba(0,0,0,0.15); }
+    .side-block.bl3 { width:35px;height:35px; background:var(--purple); top:60%; right:-15px;animation-delay:2s; box-shadow: 4px 4px 0 rgba(0,0,0,0.15); }
+
+    /* ──────────────── SECTION SHARED ──────────────── */
+    .section-tag {
+      display: inline-block;
+      font-size: 0.75rem; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px; border-radius: 50px;
+      margin-bottom: 16px;
+    }
+    .tag-red    { background: rgba(230,57,70,0.12);  color: var(--red);    }
+    .tag-blue   { background: rgba(58,134,255,0.12); color: var(--blue);   }
+    .tag-green  { background: rgba(6,214,160,0.12);  color: var(--green);  }
+    .tag-purple { background: rgba(131,56,236,0.12); color: var(--purple); }
+    .tag-yellow { background: rgba(255,190,11,0.18); color: #B58A00;       }
+
+    .section-heading {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 900; letter-spacing: -1px;
+      line-height: 1.15; margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1.05rem; color: var(--mid); line-height: 1.7; max-width: 560px;
+    }
+
+    section { padding: 100px 40px; }
+
+    /* ──────────────── PROBLEM SECTION ──────────────── */
+    #problem {
+      background: var(--dark);
+      color: #fff;
+    }
+    .problem-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; gap: 80px;
+    }
+    .problem-text { flex: 1; }
+    .problem-text .section-sub { color: rgba(255,255,255,0.65); max-width: 440px; }
+
+    .problem-points {
+      margin-top: 32px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .problem-point {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.95rem; color: rgba(255,255,255,0.8);
+    }
+    .problem-point .pp-dot {
+      width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0;
+    }
+
+    /* JENGA TOWER */
+    .jenga-wrapper {
+      flex: 0 0 260px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 12px;
+    }
+    .jenga-label {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+      color: rgba(255,255,255,0.4); text-transform: uppercase; text-align: center;
+    }
+
+    .jenga-tower {
+      cursor: pointer;
+      transform-origin: bottom center;
+      transition: transform 0.15s;
+      position: relative;
+    }
+    .jenga-tower.shaking {
+      animation: jengaShake 0.6s ease-in-out;
+    }
+    @keyframes jengaShake {
+      0%        { transform: rotate(0deg)   translateX(0); }
+      15%       { transform: rotate(-3.5deg) translateX(-8px); }
+      30%       { transform: rotate(3deg)   translateX(8px); }
+      45%       { transform: rotate(-2.5deg) translateX(-6px); }
+      60%       { transform: rotate(2deg)   translateX(5px); }
+      75%       { transform: rotate(-1deg)  translateX(-3px); }
+      90%       { transform: rotate(0.8deg) translateX(2px); }
+      100%      { transform: rotate(0deg)   translateX(0); }
+    }
+
+    .j-row {
+      display: flex; justify-content: center; gap: 4px;
+      margin-bottom: 4px; position: relative;
+    }
+    .j-piece {
+      height: 18px; border-radius: 5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .j-row.horizontal .j-piece { width: 58px; }
+    .j-row.vertical   { gap: 0; }
+    .j-row.vertical .j-piece { width: 18px; margin: 0 2px; }
+
+    .j-piece.red    { background: var(--red);    box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
+    .j-piece.blue   { background: var(--blue);   box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
+    .j-piece.yellow { background: var(--yellow); box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
+    .j-piece.green  { background: var(--green);  box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
+    .j-piece.purple { background: var(--purple); box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
+    .j-piece.gray   { background: #555;          box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
+    .j-piece.ghost  { background: transparent; border: 2px dashed rgba(255,255,255,0.15); box-shadow: none; }
+
+    /* Tilted rows for instability */
+    .j-row.tilt-l { transform: rotate(-2deg) translateX(-3px); }
+    .j-row.tilt-r { transform: rotate(2.5deg) translateX(4px); }
+    .j-row.tilt-ll { transform: rotate(-4deg) translateX(-6px); }
+    .j-row.tilt-rr { transform: rotate(5deg) translateX(7px); }
+
+    /* ──────────────── FEATURES ──────────────── */
+    #features { background: var(--cream); }
+    .features-inner { max-width: 1100px; margin: 0 auto; }
+    .features-header { text-align: center; margin-bottom: 64px; }
+    .features-header .section-sub { margin: 0 auto; }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+    }
+
+    .feature-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      border: 2px solid rgba(0,0,0,0.06);
+      box-shadow: var(--shadow);
+      transition: transform 0.25s, box-shadow 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 5px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .card-red::before    { background: var(--red); }
+    .card-blue::before   { background: var(--blue); }
+    .card-green::before  { background: var(--green); }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.12), 0 0 0 2px rgba(0,0,0,0.08);
+    }
+
+    .feature-icon-block {
+      width: 64px; height: 64px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+    }
+    .icon-red    { background: var(--red); }
+    .icon-blue   { background: var(--blue); }
+    .icon-green  { background: var(--green); }
+
+    .feature-icon-block svg { width: 30px; height: 30px; }
+
+    .feature-title {
+      font-size: 1.25rem; font-weight: 800;
+      margin-bottom: 12px; letter-spacing: -0.4px;
+    }
+    .feature-desc {
+      font-size: 0.95rem; color: var(--mid); line-height: 1.68;
+    }
+
+    .feature-tag {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 0.78rem; font-weight: 700;
+      padding: 4px 12px; border-radius: 20px;
+    }
+    .ft-red    { background: rgba(230,57,70,0.1);  color: var(--red); }
+    .ft-blue   { background: rgba(58,134,255,0.1); color: var(--blue); }
+    .ft-green  { background: rgba(6,214,160,0.1);  color: var(--green); }
+
+    /* ──────────────── BRAND STORY ──────────────── */
+    #brand { background: var(--light); }
+    .brand-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; gap: 80px;
+    }
+
+    .wb-visual {
+      flex: 0 0 300px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+
+    .wb-title-big {
+      font-size: 5rem; font-weight: 900; letter-spacing: -3px;
+      color: var(--dark); margin-bottom: 12px;
+      text-align: center;
+    }
+    .wb-title-big span:first-child { color: var(--blue); }
+    .wb-title-big span:last-child  { color: var(--purple); }
+
+    .wb-blocks-row {
+      display: flex; gap: 6px; margin-bottom: 4px;
+    }
+    .wb-block {
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 0.75rem; color: rgba(255,255,255,0.9);
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    }
+    .wb-block:hover { transform: translateY(-4px); }
+    .w40 { width:40px; height:40px; }
+    .w60 { width:60px; height:40px; }
+    .w80 { width:80px; height:40px; }
+
+    .brand-text { flex: 1; }
+    .brand-text .section-sub { margin-bottom: 28px; }
+
+    .we-block-pills {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+    .wb-pill {
+      padding: 8px 20px; border-radius: 50px;
+      font-size: 0.88rem; font-weight: 700;
+      border: 2px solid transparent;
+    }
+    .pill-r { background: rgba(230,57,70,0.1);  color:var(--red);    border-color: rgba(230,57,70,0.25); }
+    .pill-b { background: rgba(58,134,255,0.1); color:var(--blue);   border-color: rgba(58,134,255,0.25); }
+    .pill-g { background: rgba(6,214,160,0.1);  color:var(--green);  border-color: rgba(6,214,160,0.25); }
+    .pill-y { background: rgba(255,190,11,0.12);color:#9A6D00;       border-color: rgba(255,190,11,0.3); }
+    .pill-p { background: rgba(131,56,236,0.1); color:var(--purple); border-color: rgba(131,56,236,0.25); }
+
+    /* ──────────────── FOOTER ──────────────── */
+    footer {
+      background: var(--dark); color: rgba(255,255,255,0.7);
+      padding: 60px 40px 40px;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+    .footer-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 40px; flex-wrap: wrap;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 32px;
+    }
+    .footer-brand .nav-logo { color: #fff; margin-bottom: 14px; }
+    .footer-brand p { font-size: 0.88rem; line-height: 1.7; max-width: 260px; }
+
+    .footer-links-col h4 {
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 1.5px;
+      text-transform: uppercase; color: rgba(255,255,255,0.9);
+      margin-bottom: 16px;
+    }
+    .footer-links-col ul { list-style: none; }
+    .footer-links-col ul li { margin-bottom: 10px; }
+    .footer-links-col ul a {
+      color: rgba(255,255,255,0.55); text-decoration: none;
+      font-size: 0.92rem; transition: color 0.2s;
+    }
+    .footer-links-col ul a:hover { color: #fff; }
+
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { font-size: 0.84rem; }
+    .footer-badges { display: flex; gap: 8px; }
+    .f-badge {
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700;
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);
+    }
+
+    /* ──────────────── REVEAL ANIMATION ──────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+
+    /* ──────────────── RESPONSIVE ──────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .hero-inner { flex-direction: column; align-items: flex-start; gap: 40px; }
+      .hero-visual { align-self: center; }
+      .problem-inner { flex-direction: column; gap: 48px; }
+      .brand-inner { flex-direction: column; gap: 48px; }
+      .wb-visual { flex: unset; }
+      section { padding: 72px 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .footer-top { flex-direction: column; }
+    }
+    @media (max-width: 480px) {
+      .hero-visual { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ──────────────── NAV ──────────────── -->
+  <nav id="mainNav">
+    <a href="#" class="nav-logo">
+      <div class="logo-blocks">
+        <span class="lb1"></span><span class="lb2"></span>
+        <span class="lb3"></span><span class="lb4"></span>
+      </div>
+      WeBlock
+    </a>
+    <ul class="nav-links">
+      <li><a href="#problem">문제</a></li>
+      <li><a href="#features">기능</a></li>
+      <li><a href="#brand">우리 이야기</a></li>
+    </ul>
+    <a href="#features" class="nav-cta">시작하기</a>
+  </nav>
+
+  <!-- ──────────────── HERO ──────────────── -->
+  <section class="hero" id="home">
+    <div class="hero-bg-blocks">
+      <div class="bg-block"></div><div class="bg-block"></div>
+      <div class="bg-block"></div><div class="bg-block"></div>
+      <div class="bg-block"></div><div class="bg-block"></div>
+      <div class="bg-block"></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-text reveal">
+        <div class="hero-badge"><span class="dot"></span> 베타 진행 중</div>
+        <h1 class="hero-title">
+          당신의<br/>
+          <span class="highlight-red">마음</span>을 쌓는<br/>
+          <span class="highlight-blue">블록</span><span class="highlight-green">.</span>
+        </h1>
+        <p class="hero-subtitle-kr">마음을 쌓아가는 블록 - 싸이칼러</p>
+        <p class="hero-desc">
+          PsyColor WeBlock 은 블록 기반의 재미있는 정신 건강 도구로
+          감정의 지형을 이해하도록 돕습니다.
+          블록 하나씩, 더 단단한 마음을 쌓아가세요.
+        </p>
+        <div class="hero-buttons">
+          <a href="#features" class="btn-primary">시작하기</a>
+          <a href="#brand" class="btn-secondary">우리 이야기</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="globe-scene">
+          <div class="side-block bl1"></div>
+          <div class="side-block bl2"></div>
+          <div class="side-block bl3"></div>
+
+          <div class="globe-body">
+            <div class="globe-face">
+              <div class="globe-eyes">
+                <div class="globe-eye"></div>
+                <div class="globe-eye"></div>
+              </div>
+              <div class="globe-cheeks">
+                <div class="cheek"></div>
+                <div class="cheek"></div>
+              </div>
+              <div class="globe-smile"></div>
+            </div>
+          </div>
+
+          <div class="stack-blocks">
+            <div class="s-block sb1">WE BLOCK</div>
+            <div class="s-block sb2">PSYCOLOR</div>
+            <div class="s-block sb3">킴랩</div>
+          </div>
+
+          <div class="globe-shadow"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────── PROBLEM ──────────────── -->
+  <section id="problem">
+    <div class="problem-inner">
+      <div class="problem-text reveal">
+        <span class="section-tag tag-red">문제</span>
+        <h2 class="section-heading" style="color:#fff;">
+          감정이<br/>불안정해질 때.
+        </h2>
+        <p class="section-sub">
+          젠가 탑처럼, 핵심 감정 블록이 다뤄지지 않으면
+          우리의 정신 건강은 약해질 수 있습니다.
+          잘못된 블록 하나를 빼면 모든 것이 무너집니다.
+        </p>
+        <div class="problem-points">
+          <div class="problem-point"><div class="pp-dot" style="background:var(--red)"></div>추적되지 않은 감정 패턴은 보이지 않는 스트레스를 쌓습니다</div>
+          <div class="problem-point"><div class="pp-dot" style="background:var(--yellow)"></div>억눌린 감정은 중요한 지지 블록을 제거합니다</div>
+          <div class="problem-point"><div class="pp-dot" style="background:var(--blue)"></div>통찰 없이는 탑이 예고 없이 무너집니다</div>
+        </div>
+      </div>
+
+      <div class="jenga-wrapper reveal reveal-d2">
+        <div class="jenga-tower" id="jengaTower">
+
+          <!-- Row 1 - bottom, stable -->
+          <div class="j-row horizontal">
+            <div class="j-piece blue"></div>
+            <div class="j-piece blue"></div>
+            <div class="j-piece blue"></div>
+          </div>
+          <!-- Row 2 -->
+          <div class="j-row vertical">
+            <div class="j-piece green"></div>
+            <div class="j-piece green"></div>
+            <div class="j-piece green"></div>
+          </div>
+          <!-- Row 3 -->
+          <div class="j-row horizontal">
+            <div class="j-piece purple"></div>
+            <div class="j-piece purple"></div>
+            <div class="j-piece purple"></div>
+          </div>
+          <!-- Row 4 - slight tilt -->
+          <div class="j-row vertical tilt-l">
+            <div class="j-piece yellow"></div>
+            <div class="j-piece yellow"></div>
+            <div class="j-piece gray"></div>
+          </div>
+          <!-- Row 5 -->
+          <div class="j-row horizontal tilt-r">
+            <div class="j-piece red"></div>
+            <div class="j-piece red"></div>
+            <div class="j-piece red"></div>
+          </div>
+          <!-- Row 6 - one missing -->
+          <div class="j-row vertical tilt-l">
+            <div class="j-piece blue"></div>
+            <div class="j-piece ghost"></div>
+            <div class="j-piece blue"></div>
+          </div>
+          <!-- Row 7 - more tilt -->
+          <div class="j-row horizontal tilt-rr">
+            <div class="j-piece green"></div>
+            <div class="j-piece green"></div>
+            <div class="j-piece ghost"></div>
+          </div>
+          <!-- Row 8 - very unstable -->
+          <div class="j-row vertical tilt-ll">
+            <div class="j-piece ghost"></div>
+            <div class="j-piece purple"></div>
+            <div class="j-piece purple"></div>
+          </div>
+          <!-- Row 9 - top, precarious -->
+          <div class="j-row horizontal tilt-rr">
+            <div class="j-piece yellow"></div>
+            <div class="j-piece ghost"></div>
+            <div class="j-piece ghost"></div>
+          </div>
+          <!-- Row 10 - tippy top -->
+          <div class="j-row vertical" style="transform:rotate(8deg) translateX(12px)">
+            <div class="j-piece red"></div>
+            <div class="j-piece ghost"></div>
+          </div>
+
+        </div>
+        <p class="jenga-label">마우스를 올리면 흔들림</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────── FEATURES ──────────────── -->
+  <section id="features">
+    <div class="features-inner">
+      <div class="features-header reveal">
+        <span class="section-tag tag-blue">기능</span>
+        <h2 class="section-heading">기반을 다시<br/>쌓는 도구.</h2>
+        <p class="section-sub">
+          세 가지 강력한 블록이 함께 작동하여
+          감정적 웰빙을 이해하고, 추적하고, 강화하는 것을 돕습니다.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Card 1 -->
+        <div class="feature-card card-red reveal reveal-d1">
+          <div class="feature-icon-block icon-red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+              <rect x="9" y="3" width="6" height="4" rx="1"/>
+              <line x1="9" y1="12" x2="15" y2="12"/>
+              <line x1="9" y1="16" x2="13" y2="16"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">컬러 설문</h3>
+          <p class="feature-desc">
+            색으로 감정을 표현하세요. 킴랩의 설문은
+            색채 심리학을 활용해 실시간으로 감정 상태를 매핑하여,
+            자기 성찰을 직관적이고 재미있게 만듭니다.
+          </p>
+          <span class="feature-tag ft-red">설문 블록</span>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="feature-card card-blue reveal reveal-d2">
+          <div class="feature-icon-block icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+              <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">킴랩의 분석</h3>
+          <p class="feature-desc">
+            우리 모델은 색 사이를 읽어 감정 패턴,
+            스트레스 신호, 성장 기회를 파악하고,
+            당신과 함께 진화하는 맞춤형 통찰을 제공합니다.
+          </p>
+          <span class="feature-tag ft-blue">분석 블록</span>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="feature-card card-green reveal reveal-d3">
+          <div class="feature-icon-block icon-green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+              <path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">블록 기록</h3>
+          <p class="feature-desc">
+            시간이 지나며 정신 건강 탑이 자라는 모습을 확인하세요.
+            놓은 모든 블록의 아름다운 시각적 기록으로,
+            감정 여정의 구조를 보여줍니다.
+          </p>
+          <span class="feature-tag ft-green">기록 블록</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────── BRAND STORY ──────────────── -->
+  <section id="brand">
+    <div class="brand-inner">
+      <div class="wb-visual reveal">
+        <div class="wb-title-big"><span>W</span><span>B</span></div>
+        <div class="wb-blocks-row">
+          <div class="wb-block w40" style="background:var(--red)"></div>
+          <div class="wb-block w60" style="background:var(--blue)">우리</div>
+          <div class="wb-block w40" style="background:var(--yellow)"></div>
+        </div>
+        <div class="wb-blocks-row">
+          <div class="wb-block w60" style="background:var(--green)">블록</div>
+          <div class="wb-block w80" style="background:var(--purple)">함께</div>
+        </div>
+        <div class="wb-blocks-row">
+          <div class="wb-block w40" style="background:var(--yellow)"></div>
+          <div class="wb-block w40" style="background:var(--red)"></div>
+          <div class="wb-block w40" style="background:var(--blue)"></div>
+        </div>
+      </div>
+
+      <div class="brand-text reveal reveal-d2">
+        <span class="section-tag tag-purple">우리 이야기</span>
+        <h2 class="section-heading">WB는<br/>We Block.</h2>
+        <p class="section-sub">
+          We Block은 PsyColor 의 핵심입니다. 정신 건강은
+          혼자서 쌓을 수 없다는 믿음입니다. 색을 나누고,
+          설문에 참여하고, 블록을 기록하는 모든 사람이
+          이해의 공동 기반에 기여합니다.
+        </p>
+        <br/>
+        <p class="section-sub">
+          우리는 감정과 싸우지 않고, 감정으로 쌓아갑니다.
+          모든 감정, 모든 색, 모든 하루는
+          더 건강한 마음의 구조를 이루는 블록입니다. 함께,
+          빛을 쌓아 어둠을 막아냅니다.
+        </p>
+        <div class="we-block-pills" style="margin-top: 32px;">
+          <span class="wb-pill pill-r">감정 인식</span>
+          <span class="wb-pill pill-b">색채 심리학</span>
+          <span class="wb-pill pill-g">커뮤니티 케어</span>
+          <span class="wb-pill pill-y">매일 성찰</span>
+          <span class="wb-pill pill-p">킴랩의 통찰</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────── FOOTER ──────────────── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom:14px;display:inline-flex;">
+            <div class="logo-blocks">
+              <span class="lb1"></span><span class="lb2"></span>
+              <span class="lb3"></span><span class="lb4"></span>
+            </div>
+            PsyColor
+          </div>
+          <p>알록달록한 블록 하나씩 정신 건강을 쌓아갑니다. WB - We Block, 함께.</p>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>제품</h4>
+          <ul>
+            <li><a href="#">컬러 설문</a></li>
+            <li><a href="#">킴랩의 분석</a></li>
+            <li><a href="#">블록 기록</a></li>
+            <li><a href="#">시작하기</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>회사</h4>
+          <ul>
+            <li><a href="#">WB 소개</a></li>
+            <li><a href="#">미션</a></li>
+            <li><a href="#">블로그</a></li>
+            <li><a href="#">문의</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>지원</h4>
+          <ul>
+            <li><a href="#">자주 묻는 질문</a></li>
+            <li><a href="#">개인정보 처리방침</a></li>
+            <li><a href="#">이용약관</a></li>
+            <li><a href="#">접근성</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 PsyColor / WB (We Block). 모든 권리 보유. 씨이칼러</p>
+        <div class="footer-badges">
+          <span class="f-badge">베타 v0.1</span>
+          <span class="f-badge">정신 건강</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll shadow
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // Jenga tower shake on hover + click
+    const tower = document.getElementById('jengaTower');
+    let shaking = false;
+
+    function shakeTower() {
+      if (shaking) return;
+      shaking = true;
+      tower.classList.add('shaking');
+      setTimeout(() => {
+        tower.classList.remove('shaking');
+        shaking = false;
+      }, 650);
+    }
+
+    tower.addEventListener('mouseenter', shakeTower);
+    tower.addEventListener('click', shakeTower);
+
+    // Auto-shake every 5 seconds when in view
+    const problemSection = document.getElementById('problem');
+    let autoShakeInterval = null;
+
+    const problemObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          autoShakeInterval = setInterval(shakeTower, 4500);
+        } else {
+          clearInterval(autoShakeInterval);
+        }
+      });
+    }, { threshold: 0.4 });
+    problemObserver.observe(problemSection);
+
+    // Smooth scroll for all internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Initial reveal for hero
+    setTimeout(() => {
+      document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('revealed'));
+    }, 200);
+  </script>
+
+</body>
+</html>
